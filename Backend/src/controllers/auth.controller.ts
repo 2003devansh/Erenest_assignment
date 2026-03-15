@@ -78,3 +78,48 @@ export const login = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// Referesh controller
+export const refreshToken = async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: "Refresh token is required",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
+      userId: string;
+    };
+
+    const newAccessToken = jwt.sign({ userId: decoded.userId }, ACCESS_SECRET, {
+      expiresIn: "15m",
+    });
+
+    return res.json({
+      accessToken: newAccessToken,
+    });
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid refresh token" });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(400).json({ message: "Refresh token required" });
+  }
+
+  try {
+    await prisma.user.updateMany({
+      where: { refreshToken },
+      data: { refreshToken: null },
+    });
+
+    return res.json({ message: "Logged out successfully" });
+  } catch {
+    return res.status(500).json({ message: "Server error" });
+  }
+};

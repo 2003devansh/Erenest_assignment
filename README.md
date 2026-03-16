@@ -292,5 +292,3 @@ Authorization: Bearer TOKEN
 ---
 
 # Author
-
-Developed as part of a **Software Engineering Assessment**.

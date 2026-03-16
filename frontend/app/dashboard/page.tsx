@@ -91,10 +91,8 @@ export default function Dashboard() {
       <div className="max-w-2xl mx-auto mt-8 p-4">
         <h1 className="text-2xl font-bold mb-4">Task Dashboard</h1>
 
-        {/* Add Task */}
         <TaskForm onAdd={addTask} />
 
-        {/* Task List */}
         <div className="space-y-3 mt-4">
           {tasks.length === 0 ? (
             <p className="text-gray-500 text-center">No tasks yet</p>
